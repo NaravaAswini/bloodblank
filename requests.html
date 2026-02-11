@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Blood Requests</h4>
+  {% if is_admin %}
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('admin_dashboard') }}">← Back</a>
+  {% else %}
+    <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('logout') }}">Logout</a>
+  {% endif %}
+</div>
+
+{% if not is_admin %}
+<div class="card shadow-sm border-0 mb-3">
+  <div class="card-body">
+    <h6 class="mb-3">Create Request</h6>
+    <form method="post" class="row g-2">
+      <div class="col-md-5">
+        <input class="form-control" name="hospital_name" placeholder="Hospital name" required>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" name="blood_group" required>
+          {% for bg in blood_groups %}
+            <option value="{{ bg }}">{{ bg }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input class="form-control" type="number" name="units" min="1" placeholder="Units" required>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-danger">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <h6 class="mb-3">All Requests</h6>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>ID</th><th>Hospital</th><th>Group</th><th>Units</th><th>Status</th><th>Created</th>
+            {% if is_admin %}<th>Action</th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in requests %}
+            <tr>
+              <td>{{ r["request_id"] }}</td>
+              <td>{{ r["hospital_name"] }}</td>
+              <td><span class="badge text-bg-danger">{{ r["blood_group"] }}</span></td>
+              <td>{{ r["units"] }}</td>
+              <td>
+                {% if r["status"] == "PENDING" %}
+                  <span class="badge text-bg-warning">PENDING</span>
+                {% elif r["status"] == "APPROVED" %}
+                  <span class="badge text-bg-success">APPROVED</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">REJECTED</span>
+                {% endif %}
+              </td>
+              <td class="small text-muted">{{ r["created_at"] }}</td>
+
+              {% if is_admin %}
+              <td>
+                {% if r["status"] == "PENDING" %}
+                <form method="post" class="d-flex gap-2">
+                  <input type="hidden" name="request_id" value="{{ r['request_id'] }}">
+                  <button class="btn btn-sm btn-success" name="action" value="approve">Approve</button>
+                  <button class="btn btn-sm btn-outline-danger" name="action" value="reject">Reject</button>
+                </form>
+                {% else %}
+                  <span class="text-muted small">—</span>
+                {% endif %}
+              </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          {% if requests|length == 0 %}
+            <tr><td colspan="7" class="text-muted">No requests found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

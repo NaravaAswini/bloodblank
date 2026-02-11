@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h4 class="mb-3">Register (Hospital)</h4>
+
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input class="form-control" name="username" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" required>
+          </div>
+
+          <input type="hidden" name="role" value="hospital">
+
+          <button class="btn btn-danger w-100">Create Account</button>
+        </form>
+
+        <div class="mt-3 text-center">
+          <a href="{{ url_for('login') }}">Already have an account? Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

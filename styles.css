@@ -1,0 +1,4 @@
+body { background: #f6f7fb; }
+.card { border-radius: 16px; }
+.btn, .form-control, .form-select { border-radius: 12px; }
+.table { margin-bottom: 0; }

@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Demand Prediction</h4>
+  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('admin_dashboard') }}">← Back</a>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <p class="text-muted mb-3">
+      Prediction for <b>{{ next_month }}</b> using historical usage (demo ML).
+    </p>
+
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr><th>Blood Group</th><th>Predicted Units</th><th>Demand</th><th>Method</th></tr>
+        </thead>
+        <tbody>
+          {% for r in results %}
+            <tr>
+              <td><span class="badge text-bg-danger">{{ r.blood_group }}</span></td>
+              <td class="fw-semibold">{{ r.predicted_units }}</td>
+              <td>
+                {% if r.demand == "HIGH" %}
+                  <span class="badge text-bg-danger">HIGH</span>
+                {% elif r.demand == "MEDIUM" %}
+                  <span class="badge text-bg-warning">MEDIUM</span>
+                {% else %}
+                  <span class="badge text-bg-success">LOW</span>
+                {% endif %}
+              </td>
+              <td class="text-muted small">{{ r.method }}</td>
+            </tr>
+          {% endfor %}
+          {% if results|length == 0 %}
+            <tr><td colspan="4" class="text-muted">No prediction data.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="small text-muted">
+      Tip: Add more months in <b>usage_history</b> table for better prediction.
+    </div>
+  </div>
+</div>
+{% endblock %}

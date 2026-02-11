@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <a class="btn btn-outline-primary" href="{{ url_for('donors') }}">👤 Donors</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('stock') }}">📦 Stock</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('admin_requests') }}">🏥 Requests</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('prediction') }}">📈 Prediction</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted">Total Donors</div>
+        <div class="display-6 fw-semibold">{{ donors_count }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted">Pending Requests</div>
+        <div class="display-6 fw-semibold">{{ pending_requests }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted">Low Stock Alerts (&lt; 3 units)</div>
+        <div class="mt-2">
+          {% if low %}
+            {% for s in low %}
+              <span class="badge text-bg-warning me-1">{{ s["blood_group"] }}: {{ s["total_units"] }}</span>
+            {% endfor %}
+          {% else %}
+            <span class="badge text-bg-success">All Good ✅</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+  <div class="card-body">
+    <h5 class="mb-3">Current Stock Summary</h5>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Blood Group</th>
+            <th>Total Units</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in stock %}
+            <tr>
+              <td><span class="badge text-bg-danger">{{ s["blood_group"] }}</span></td>
+              <td>{{ s["total_units"] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

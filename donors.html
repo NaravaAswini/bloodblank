@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Donors</h4>
+  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('admin_dashboard') }}">← Back</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h6 class="mb-3">Add Donor</h6>
+        <form method="post">
+          <div class="mb-2">
+            <label class="form-label">Full Name *</label>
+            <input class="form-control" name="full_name" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Blood Group *</label>
+            <select class="form-select" name="blood_group" required>
+              {% for bg in blood_groups %}
+                <option value="{{ bg }}">{{ bg }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row g-2">
+            <div class="col-6 mb-2">
+              <label class="form-label">Gender</label>
+              <select class="form-select" name="gender">
+                <option value="">-</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="col-6 mb-2">
+              <label class="form-label">Age</label>
+              <input class="form-control" name="age" type="number" min="18" max="60">
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Phone *</label>
+            <input class="form-control" name="phone" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Email</label>
+            <input class="form-control" name="email">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">City</label>
+            <input class="form-control" name="city">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last Donation Date</label>
+            <input class="form-control" name="last_donation_date" type="date">
+          </div>
+          <button class="btn btn-danger w-100">Save Donor</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0">Donor List</h6>
+
+          <form class="d-flex gap-2" method="get">
+            <select class="form-select form-select-sm" name="bg">
+              <option value="">All Groups</option>
+              {% for bg in blood_groups %}
+                <option value="{{ bg }}" {% if selected_bg==bg %}selected{% endif %}>{{ bg }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-outline-primary btn-sm">Filter</button>
+          </form>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Group</th><th>Phone</th><th>City</th><th>Last Donation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in donors %}
+                <tr>
+                  <td>{{ d["donor_id"] }}</td>
+                  <td>{{ d["full_name"] }}</td>
+                  <td><span class="badge text-bg-danger">{{ d["blood_group"] }}</span></td>
+                  <td>{{ d["phone"] }}</td>
+                  <td>{{ d["city"] }}</td>
+                  <td>{{ d["last_donation_date"] if d["last_donation_date"] else "-" }}</td>
+                </tr>
+              {% endfor %}
+              {% if donors|length == 0 %}
+                <tr><td colspan="6" class="text-muted">No donors found.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
